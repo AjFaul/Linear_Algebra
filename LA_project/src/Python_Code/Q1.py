@@ -5,6 +5,10 @@ class Matrix_Operation:
     def __init__(self,matrix):
         self.__matrix=np.array(matrix)
 
+    def set_matrix(self,array):
+        array=np.array(array)
+        self.__matrix=array
+
     def show_matrix(self,matrix=None):
         if matrix is None :
             print(matrix)
@@ -60,6 +64,31 @@ class Matrix_Operation:
         self.__matrix=inv
         return inv
     
+    def multiply_matrices(self, array1, array2):
+        array1 = np.array(array1)
+        array2 = np.array(array2)
+            
+        if array1.shape[1] != array2.shape[0]:
+            raise ValueError("Incompatible dimensions for matrix multiplication.")
+            
+        rows_array1 = array1.shape[0]
+        cols_array2 = array2.shape[1]
+        cols_array1 = array1.shape[1]
+            
+        result = np.zeros((rows_array1, cols_array2))
+            
+        for i in range(rows_array1):
+            for j in range(cols_array2):
+                sum = 0
+                for k in range(cols_array1):
+                    sum += array1[i][k] * array2[k][j]
+                result[i][j] = sum
+            
+        return result
+
+
+
+
 
 
     
@@ -71,7 +100,7 @@ class Matrix_Operation:
 
 
 
-a=np.array([[2,1,2],[2,0,0],[0,0,1]])
+a=np.array([[1,0,0],[0,1,0],[0,0,1]])
 Matrix_op=Matrix_Operation(a)
 # Matrix_op.show_matrix()
 # print(Matrix_op.transpose())
