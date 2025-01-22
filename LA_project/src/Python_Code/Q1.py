@@ -5,7 +5,9 @@ class Matrix_Operation:
     def __init__(self,matrix):
         self.__matrix=np.array(matrix)
 
-    def show_matrix(self):
+    def show_matrix(self,matrix=None):
+        if matrix is None :
+            print(matrix)
         print(self.__matrix)
 
     def transpose(self):
@@ -17,7 +19,6 @@ class Matrix_Operation:
         self.__matrix=transpose_arr
         return transpose_arr
     
-
     def determinant(self, array=None):
         if array is None:
             array = self.__matrix
@@ -38,6 +39,27 @@ class Matrix_Operation:
             det += ((-1) ** col) * array[0, col] * self.determinant(sub_matrix)
         return det
     
+    def adjugate(self):
+        n = len(self.__matrix)
+        if n != self.__matrix.shape[1]:
+            raise ValueError("Matrix must be square to compute adjugate.")
+        adj = np.zeros((n, n))
+        for i in range(n):
+            for j in range(n):
+                sub_matrix = np.delete(np.delete(self.__matrix, i, axis=0), j, axis=1)
+                adj[i][j] = ((-1)**(i + j)) * self.determinant(sub_matrix)
+        self.__matrix=adj
+        return self.transpose()
+    
+    def inverse(self):
+        det = self.determinant()
+        if det == 0:
+            raise ValueError("Matrix is singular and cannot be inverted.")
+        adj = self.adjugate()
+        inv = adj / det
+        self.__matrix=inv
+        return inv
+    
 
 
     
@@ -49,11 +71,13 @@ class Matrix_Operation:
 
 
 
-a=np.array([[1,2,3],[0,2,2],[0,0,7]])
+a=np.array([[2,1,2],[2,0,0],[0,0,1]])
 Matrix_op=Matrix_Operation(a)
+# Matrix_op.show_matrix()
+# print(Matrix_op.transpose())
+Matrix_op.inverse()
 Matrix_op.show_matrix()
-print("\n------------------\n")
-print(f"deteminan is {Matrix_op.determinant()}")
+
 
 
 
