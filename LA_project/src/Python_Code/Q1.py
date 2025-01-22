@@ -86,26 +86,25 @@ class Matrix_Operation:
             
         return result
 
+    def A_back_slash_b(self, b):
+        a=self.__matrix
+        a_t=self.transpose()
+        self.__matrix=self.multiply_matrices(a_t,a)
+        at_a_inv=self.inverse()
+        a_cross=self.multiply_matrices(at_a_inv,a_t)
+        return self.multiply_matrices(a_cross,b)
 
 
 
+A=np.array([[1,7,3,5],[7,4,6,2],[3,6,0,2],[5,2,2,-1]])
+b=np.array([[1],[2],[5],[-1]])
+#init matrix
+Matrix_op=Matrix_Operation(A)
+
+# A/b
+print(Matrix_op.A_back_slash_b(b))
 
 
-    
-
-
-
-
-
-
-
-
-a=np.array([[1,0,0],[0,1,0],[0,0,1]])
-Matrix_op=Matrix_Operation(a)
-# Matrix_op.show_matrix()
-# print(Matrix_op.transpose())
-Matrix_op.inverse()
-Matrix_op.show_matrix()
 
 
 
