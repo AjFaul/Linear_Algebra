@@ -72,7 +72,6 @@ class Matrix_Operation:
     def multiply_matrices(self, array1, array2):
         array1 = np.array(array1)
         array2 = np.array(array2)
-            
         if array1.shape[1] != array2.shape[0]:
             raise ValueError("Incompatible dimensions for matrix multiplication.")
             
@@ -141,7 +140,14 @@ class Jacobi:
         # print(f"Hi p is {max_num[1]} and q is {max_num[2]}")
         return self.rotation_matrices(shape[1],theta,max_num[1],max_num[2])
 
-        
+def calc_eigen_vec(list_of_E):
+    sizeee=list((list_of_E[0].get_matrix()).shape)
+    ee=Matrix_Operation(np.eye(sizeee[1]))
+    for i in range(len(list_of_E)):
+        ee.set_matrix(ee.multiply_matrices(ee.get_matrix(),list_of_E[i].get_matrix()))
+    return ee
+
+  
 def jacobi_method(matrix,num_of_iteration):
     j=Jacobi()
     list_of_E=[]
@@ -149,10 +155,14 @@ def jacobi_method(matrix,num_of_iteration):
     for i in range(num_of_iteration):
         e=j.create_E(m.get_matrix())
         E=Matrix_Operation(e)
-        list_of_E.append(E)
         m.set_matrix(m.multiply_matrices(E.transpose(),m.get_matrix()))
+        list_of_E.append(E)
         m.set_matrix(m.multiply_matrices(m.get_matrix(),E.transpose()))
-    return [list_of_E,m]
+    matrix_eigen_vec=calc_eigen_vec(list_of_E)
+    return [matrix_eigen_vec,m]
+
+
+        
         
         
 
@@ -170,8 +180,25 @@ def jacobi_method(matrix,num_of_iteration):
 
 A=np.array([[1,7,3,5],[7,4,6,2],[3,6,0,2],[5,2,2,-1]])
 ans=jacobi_method(A,100)
+
+ans[0].show_matrix(ans[0].get_matrix())
 ans[1].show_matrix(ans[1].get_matrix())
 
+
+
+
+# test
+m1=ans[0]
+m3=ans[0]
+m2=ans[1]
+m1=Matrix_Operation(m1.get_matrix())
+m3=Matrix_Operation(m3.get_matrix())
+m2=Matrix_Operation(m2.get_matrix())
+
+m1.set_matrix(m1.multiply_matrices(m1.get_matrix(),m2.get_matrix()))
+m1.set_matrix(m1.multiply_matrices(m1.get_matrix(),m3.transpose()))
+print("---------------------")
+m1.show_matrix(m1.get_matrix)
 
 
     
