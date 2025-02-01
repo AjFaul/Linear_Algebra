@@ -1,5 +1,7 @@
 import numpy as np
 import pandas as pd
+import math as m
+
 
 class Matrix_Operation:
     def __init__(self,matrix):
@@ -8,6 +10,9 @@ class Matrix_Operation:
     def set_matrix(self,array):
         array=np.array(array)
         self.__matrix=array
+    
+    def get_matrix(self):
+        return self.__matrix
 
     def show_matrix(self,matrix=None):
         if matrix is None :
@@ -93,30 +98,83 @@ class Matrix_Operation:
         at_a_inv=self.inverse()
         a_cross=self.multiply_matrices(at_a_inv,a_t)
         return self.multiply_matrices(a_cross,b)
-
     
 
+class Jacobi:
+    
+    def rotation_matrices(self,size, theta,p,q):
+        # print(f"theta is {theta}")
+        E=np.eye(size)
+        E[p][q]=m.sin(theta)
+        E[p][p]=m.cos(theta)
+        E[q][q]=m.cos(theta)
+        E[q][p]=-1 * m.sin(theta)
+        # print(E)
+        return E 
 
-A=np.array([[1,7,3,5],[7,4,6,2],[3,6,0,2],[5,2,2,-1]])
-b=np.array([[1],[2],[5],[-1]])
-#init matrix
-Matrix_op=Matrix_Operation(A)
+    def max_abs_element(self,matrix,num_row,num_col):
+        max_num=[-1000000,0,0]
+        for i in range(num_row):
+            for j in range(num_col):
+                if max_num[0]<abs(matrix[i][j]) and i!=j:
+                    max_num[0]=abs(matrix[i][j])
+                    max_num[1]=i
+                    max_num[2]=j
+        return max_num
+  
+    def find_theta(self,matrix):
+        j=Jacobi()
+        shape=list(matrix.shape)
+        max_element=j.max_abs_element(matrix,shape[0],shape[1])
+        p=max_element[1]
+        q=max_element[2]
+        if (matrix[p][p] - matrix[q][q]) ==  0 :
+            theta= m.pi * 1/4 * (matrix[p][q] / abs(matrix[q][p]))
+        else:
+            theta=(1/2) * m.atan(-1 * 2 * matrix[p][q] / (matrix[p][p] - matrix[q][q] ))
+        return theta
 
-# A/b
-print(Matrix_op.A_back_slash_b(b))
-
-
-
-
-
-
-
-
+    def create_E(self,matrix):
+        shape=list(matrix.shape)
+        theta=self.find_theta(matrix)
+        max_num=self.max_abs_element(matrix,shape[0],shape[1])
+        # print(f"Hi p is {max_num[1]} and q is {max_num[2]}")
+        return self.rotation_matrices(shape[1],theta,max_num[1],max_num[2])
 
         
-            
+def jacobi_method(matrix,num_of_iteration):
+    j=Jacobi()
+    list_of_E=[]
+    m=Matrix_Operation(matrix)
+    for i in range(num_of_iteration):
+        e=j.create_E(m.get_matrix())
+        E=Matrix_Operation(e)
+        list_of_E.append(E)
+        m.set_matrix(m.multiply_matrices(E.transpose(),m.get_matrix()))
+        m.set_matrix(m.multiply_matrices(m.get_matrix(),E.transpose()))
+    return [list_of_E,m]
+        
+        
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
 
+A=np.array([[1,7,3,5],[7,4,6,2],[3,6,0,2],[5,2,2,-1]])
+ans=jacobi_method(A,100)
+ans[1].show_matrix(ans[1].get_matrix())
 
 
 
+    
+    
+    
+    
