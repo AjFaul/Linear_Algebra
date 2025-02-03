@@ -67,7 +67,7 @@ class Matrix_Operation:
     def multiply_matrices(self, array1, array2):
         array1 = np.array(array1)
         array2 = np.array(array2)
-            
+        
         if array1.shape[1] != array2.shape[0]:
             raise ValueError("Incompatible dimensions for matrix multiplication.")
             
@@ -94,7 +94,34 @@ class Matrix_Operation:
         a_cross=self.multiply_matrices(at_a_inv,a_t)
         return self.multiply_matrices(a_cross,b)
 
+    def LU_decomposition(self):
+        n,m =self.__matrix.shape
+        if n is not m:
+            raise ValueError("Is not Square")
+        L=np.eye(n)
+        U=self.__matrix.astype(float)
+        for k in range(n-1):
+            if U[k,k]==0:
+                raise ValueError("is singular")
+            for i in range(k+1,n):
+                L[i,k]=U[i,k]/U[k,k]
+                U[i,:]-=L[i,k]*U[k,:]
+        return L,U
     
+    def solve_lu(self,b):
+        L,U=self.LU_decomposition()
+        n=len(b)
+        y=np.zeros(n)
+        for i in range(n):
+            y[i]=b[i]- np.dot(L[i,:i],y[:i])
+        
+        n=len(y)
+        x=np.zeros(n)
+        for i in range(n-1,-1,-1):
+            x[i]= (y[i]- np.dot(U[i,i+1:] , x[i+1:]))/U[i,i]
+        return x
+        
+
 
 
 A=np.array([[1,7,3,5],[7,4,6,2],[3,6,0,2],[5,2,2,-1]])
@@ -104,6 +131,9 @@ Matrix_op=Matrix_Operation(A)
 
 # A/b
 print(Matrix_op.A_back_slash_b(b))
+
+# x=Matrix_op.solve_lu(b)
+# print(x)
 
 
 
