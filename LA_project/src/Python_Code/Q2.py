@@ -175,19 +175,27 @@ def jacobi_method(matrix,num_of_iteration):
     
     
     
-    
+import matplotlib.pyplot as plt
+
     
 
 A=np.array([[1,7,3,5],[7,4,6,2],[3,6,0,2],[5,2,2,-1]])
 ans=jacobi_method(A,100)
 
 ans[0].show_matrix(ans[0].get_matrix())
+
+
+
+
+
+
+
 ans[1].show_matrix(ans[1].get_matrix())
 
 
 
 
-# test
+# test result
 m1=ans[0]
 m3=ans[0]
 m2=ans[1]
@@ -199,6 +207,8 @@ m1.set_matrix(m1.multiply_matrices(m1.get_matrix(),m2.get_matrix()))
 m1.set_matrix(m1.multiply_matrices(m1.get_matrix(),m3.transpose()))
 print("---------------------")
 m1.show_matrix(m1.get_matrix)
+
+
 
 
     

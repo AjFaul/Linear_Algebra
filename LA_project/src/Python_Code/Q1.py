@@ -1,6 +1,4 @@
 import numpy as np
-import pandas as pd
-
 class Matrix_Operation:
     def __init__(self,matrix):
         self.__matrix=np.array(matrix)
@@ -119,22 +117,53 @@ class Matrix_Operation:
         x=np.zeros(n)
         for i in range(n-1,-1,-1):
             x[i]= (y[i]- np.dot(U[i,i+1:] , x[i+1:]))/U[i,i]
-        return x
-        
-
-
-
+        return x        
 A=np.array([[1,7,3,5],[7,4,6,2],[3,6,0,2],[5,2,2,-1]])
 b=np.array([[1],[2],[5],[-1]])
 #init matrix
 Matrix_op=Matrix_Operation(A)
-
 # A/b
-print(Matrix_op.A_back_slash_b(b))
+x=Matrix_op.solve_lu(b)
+print("x is :")
+print(x)
 
-# x=Matrix_op.solve_lu(b)
-# print(x)
 
+
+
+
+
+
+#this code just for time test and dont relate to previous code
+# import time
+# import matplotlib.pyplot as plt
+# sizes = np.arange(10, 1010, 50)  
+# num_trials = 100  
+# time_solve = []
+# time_inv = []
+
+# for n in sizes:
+#     solve_times = []
+#     inv_times = []
+#     for _ in range(num_trials):
+#         A = np.random.rand(n, n)
+#         b = np.random.rand(n, 1)     
+#         start = time.time()
+#         np.linalg.solve(A, b)
+#         solve_times.append(time.time() - start)    
+#         start = time.time()
+#         np.linalg.inv(A) @ b
+#         inv_times.append(time.time() - start)
+#     time_solve.append(np.mean(solve_times))
+#     time_inv.append(np.mean(inv_times))
+# plt.figure(figsize=(8, 6))
+# plt.plot(sizes, time_solve, 'bo-', label='np.linalg.solve(A, b)')
+# plt.plot(sizes, time_inv, 'ro-', label='np.linalg.inv(A) @ b')
+# plt.xlabel('Matrix Size (n x n)')
+# plt.ylabel('Average Time (seconds)')
+# plt.title('Comparison of np.linalg.solve vs np.linalg.inv (100 trials per size)')
+# plt.legend()
+# plt.grid(True)
+# plt.show()
 
 
 
